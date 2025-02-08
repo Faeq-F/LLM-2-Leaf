@@ -1,0 +1,12 @@
+@import './base.css';
+
+/* app mount */
+
+#app {
+  padding: 1rem;
+  background: white;
+}
+
+html.dark #app {
+  background: black;
+}
