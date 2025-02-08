@@ -1,22 +1,13 @@
 
 <script lang="ts" setup>
-// import { HfInference } from "@huggingface/inference";
-// const inference = new HfInference(token);
-
-// const out = await inference.chatCompletion({
-//   model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
-//   messages: [{ role: "user", content: "Hello, nice to meet you!" }],
-//   max_tokens: 512
-// });
-// console.log(out);
 
 import { ref, watch } from 'vue'
-import Input from '@/components/InputArea/Input.vue'
 import LeafIcon from '@/components/LeafIcon.vue'
 import HomeIcon from '@/components/HomeIcon.vue'
-import { useMessagesStore } from '@/stores/store'
+import SettingsIcon from '@/components/SettingsIcon.vue'
+
 import type { Ref } from 'vue'
-const messageStore = useMessagesStore()
+
 const isModalOpen = ref(false) // Controls the CO₂ stats popover
 const isDonationModalOpen = ref(false) // Controls the donation modal
 
@@ -32,37 +23,58 @@ const handlePlantNow = () => {
   isDonationModalOpen.value = true
 }
 
+const models = [{ name: 'ChatGPT o3-mini', model: 'Unsupported' }, { name: 'Claude 3 Opus', model: 'Unsupported' }, { name: 'DeepSeek R1', model: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B' }, { name: 'Qwen 2.5', model: 'Qwen/Qwen2.5-Coder-32B-Instruct' }, { name: 'Llama 3.3', model: 'meta-llama/Llama-3.3-70B-Instruct' }]
+const selectedModel = ref({ name: 'ChatGPT o3-mini', model: 'Unsupported' })
 
-const models = ['ChatGPT', 'Claude', 'DeepSeek']
-const selectedModel = ref('ChatGPT')
-const isModelSelectorOpen = ref(false)
+import { HfInference } from "@huggingface/inference";
+const token = ref('')
+
 const inputValue = ref('')
+const loading = ref(false)
 const messages: Ref<message[]> = ref([])
 
-const handleSubmit = () => {
-  if (inputValue.value.trim()) {
-    messages.value.push({
-      isAI: false,
-      content: inputValue.value,
-      initials: 'LF'
-    })
-    inputValue.value = ''
+const handleSubmit = async () => {
+  let val = inputValue.value;
+  loading.value = true;
+  inputValue.value = ''
+  messages.value.push({
+    isAI: false,
+    content: val,
+    initials: 'LF'
+  })
+  if (val.trim()) {
+    const inference = new HfInference(token.value);
+    await inference.chatCompletion({
+      model: selectedModel.value.model,
+      messages: [{ role: "user", content: val }],
+      max_tokens: 512
+    }).then((out) => {
+      messages.value.push({
+        isAI: true,
+        content: out.choices[0].message.content!,
+        initials: 'AI'
+      })
+    }).catch((e) => {
+      messages.value.push({
+        isAI: true,
+        content: "There was an error! Please ensure your token has been saved in settings",
+        initials: 'AI'
+      })
+    });
+    loading.value = false;
   }
 }
 
-
-const handleKeyPress = (e) => {
+const handleKeyPress = (e: any) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault()
     handleSubmit()
   }
 }
 
-
-const selectModel = (model) => {
-  selectedModel.value = model
-  isModelSelectorOpen.value = false
-}
+watch(token, (newToken) => {
+  console.log(`new token is: ${newToken}`)
+})
 </script>
 
 <template>
@@ -293,29 +305,48 @@ const selectModel = (model) => {
               <div class="flex justify-between items-center">
                 <!-- Model Selector -->
                 <div class="relative">
-                  <button @click="isModelSelectorOpen = !isModelSelectorOpen"
-                    class="inline-flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-200">
-                    {{ selectedModel }}
-                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2" stroke-linecap="round"
-                      stroke-linejoin="round">
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
-                  </button>
+                  <div class="popover mr-2">
+                    <label
+                      class="popover-trigger  btn bg-transparent border w-auto"
+                      tabindex="0">
+                      {{ selectedModel.name }}
+                      <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </label>
+                    <div
+                      class="popover-content popover-top-center w-28 m-0 items-center"
+                      tabindex="0">
+                      <div class="popover-arrow"></div>
+                      <div
+                        class="btn-group btn-group-vertical btn-group-scrollable">
+                        <button @click="() => selectedModel = model" class="btn"
+                          v-for="model in models" :key="model.name">{{ model.name
+                          }}</button>
+                      </div>
+                    </div>
+                  </div>
 
-                  <div v-if="isModelSelectorOpen"
-                    class="absolute bottom-full mb-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-neutral-800 dark:border-neutral-700">
-                    <ul class="py-1">
-                      <li v-for="model in models" :key="model">
-                        <button @click="selectModel(model)"
-                          class="block w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-700">
-                          {{ model }}
-                        </button>
-                      </li>
-                    </ul>
+                  <div class="popover ">
+                    <label
+                      class="popover-trigger  btn bg-transparent border w-auto"
+                      tabindex="0">
+                      <SettingsIcon />
+                    </label>
+                    <div
+                      class="popover-content popover-top-center w-80 items-center"
+                      tabindex="0">
+                      <div class="popover-arrow"></div>
+                      <input class="input-rounded input w-full"
+                        placeholder="Hugging Face token..." v-model="token" />
+                    </div>
                   </div>
                 </div>
+
+
 
                 <!-- Send Button -->
                 <button @click="handleSubmit" type="button"
