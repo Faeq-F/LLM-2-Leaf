@@ -13,7 +13,7 @@ import { RouterView } from 'vue-router'
 <style lang="scss">
 @use 'sass:math';
 
-@layer tailwind-base, primevue, tailwind-utilities;
+@layer tailwind-base, tailwind-utilities;
 
 @layer tailwind-base {
   @tailwind base;
@@ -24,7 +24,6 @@ import { RouterView } from 'vue-router'
   @tailwind utilities;
 }
 
-@import 'primeicons/primeicons.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
