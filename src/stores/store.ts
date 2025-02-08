@@ -1,10 +1,17 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useBgAnimStore = defineStore('bgAnim', () => {
-  const bgAnim = ref(true)
-  function flip() {
-    bgAnim.value = !bgAnim.value
+interface message {
+  isAI: boolean
+  content: string
+  initials: string
+}
+
+export const useMessagesStore = defineStore('messages', () => {
+  const messages: Ref<message[]> = ref([])
+  function push(val: message) {
+    messages.value.push(val)
   }
-  return { bgAnim, flip }
+
+  return { messages, push }
 })

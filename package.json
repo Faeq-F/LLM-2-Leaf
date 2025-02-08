@@ -12,6 +12,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@huggingface/agents": "^0.0.5",
+    "@huggingface/hub": "^1.0.1",
+    "@huggingface/inference": "^3.3.0",
     "@vueuse/core": "^12.4.0",
     "@vueuse/motion": "^2.2.6",
     "express": "^4.21.2",
