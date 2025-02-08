@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 7860
 
 # Run the app
-CMD ["node", "server.js"]
+CMD ["node", "server.cjs"]
