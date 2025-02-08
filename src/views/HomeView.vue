@@ -1,5 +1,5 @@
 <script lang="ts">
-import Archive from '@/components/Archive.vue';
+
 </script>
 
 <template>
