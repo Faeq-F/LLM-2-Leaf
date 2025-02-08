@@ -95,21 +95,19 @@ import { RouterView } from 'vue-router'
 
 .slide-enter-active,
 .slide-leave-active {
-  transition:
-    opacity 1s,
-    transform 1s;
+  transition: all 0.3s ease;
 }
 
 .slide-enter-from,
 .slide-leave-to {
+  transform: translateY(-10px);
   opacity: 0;
-  transform: translateX(-30%);
 }
 
 html,
 body {
   margin: 0;
   width: 100vw;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 </style>
