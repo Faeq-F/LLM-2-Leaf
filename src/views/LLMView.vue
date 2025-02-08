@@ -1,9 +1,6 @@
 
 <script lang="ts" setup>
 // import { HfInference } from "@huggingface/inference";
-
-
-
 // const inference = new HfInference(token);
 
 // const out = await inference.chatCompletion({
