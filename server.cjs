@@ -1,17 +1,3 @@
-
-//get env vars - only used in this file - everything else will go through the port open for server-side processing
-const dotenv = require('dotenv');
-const result = dotenv.config();
-if (result.error) {
-	throw result.error;
-}
-/**
- * @description The environment variables from the .env file.
- */
-const { parsed: envs } = result;
-
-//▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰▰
-
 //Setup db connection
 var Express = require('express');
 var MongoClient = require('mongodb').MongoClient;
@@ -30,9 +16,9 @@ var database;
  */
 app.listen(7860, () => {
 	MongoClient.connect(
-		envs.DB_API_URL,
+		"mongodb+srv://faeq:<db_password>@llm2leaf.asj1n.mongodb.net/?retryWrites=true&w=majority&appName=LLM2LEAF",
 		async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
-			database = client.db(envs.DB_NAME);
+			database = client.db("LLM2LEAF");
 			if (error) console.error(error);
 			console.log(`server-side is running at port 5038\nConnected`);
 		}
