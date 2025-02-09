@@ -6,6 +6,7 @@ import LeafIcon from '@/components/LeafIcon.vue'
 import TreeIcon from '@/components/TreeIcon.vue'
 import HomeIcon from '@/components/HomeIcon.vue'
 import CloudIcon from '@/components/CloudIcon.vue'
+import ChatIcon from '@/components/ChatIcon.vue'
 import SettingsIcon from '@/components/SettingsIcon.vue'
 
 import type { Ref } from 'vue'
@@ -21,15 +22,39 @@ function onChangeAmount(e) {
   }
 }
 
-fetch('http://localhost:5038/api/get/collection/' + 'Users').then((response) => {
-  console.log(response)
-});
+
+//attempt to use mongo db
+// fetch('http://localhost:5038/api/get/collection/' + 'Users').then((response) => {
+//   console.log(response)
+// });
+const donateLoading = ref(false)
+const donateData = ref({})
+
+const pledge = async (name, email, amount): Promise<any> => {
+  donateLoading.value = true;
+  const formdata = new FormData()
+  formdata.append('name', name)
+  formdata.append('email', email)
+  formdata.append('email', amount)
+
+  var response = await fetch('http://localhost:5038/api/pledge', {
+    method: 'POST',
+    body: formdata
+  })
+  var body = await response.json();
+  donateLoading.value = false;
+  donateData.value = body
+};
+
 
 interface message {
   isAI: boolean
   content: string
   initials: string
 }
+
+const impactOfferings = [{ name: 'Plant mangrove trees in Africa', id: 'io_01J4RSBX6KPQ4RYCRZ8C4QWRHF', divisor: 1 }, { name: 'Recover ocean-bound plastic globally', id: 'io_01J4RSBX6QX3K9HYX1Z67DSS1Y', divisor: 1000 }, { name: 'Restore coral reefs in the Maldives', id: 'io_01J4RSBX6F6CT7J4JZS14NVQWV', divisor: 25 },]
+const selectedOffering = ref({ name: 'Plant mangrove trees in Africa', id: 'io_01J4RSBX6KPQ4RYCRZ8C4QWRHF', divisor: 1 })
 
 // When Plant Now is clicked, close the CO₂ stats popover and open the donation modal.
 const handlePlantNow = () => {
@@ -54,7 +79,7 @@ const handleSubmit = async () => {
   messages.value.push({
     isAI: false,
     content: val,
-    initials: 'LF'
+    initials: 'FF'
   })
   if (val.trim()) {
     const inference = new HfInference(token.value);
@@ -92,7 +117,8 @@ watch(token, (newToken) => {
 </script>
 
 <template>
-  <div id="CurrentSite" class="h-screen w-screen p-0 m-0 absolute left-0 top-0">
+  <div id="CurrentSite"
+    class="h-screen w-screen p-0 m-0 absolute left-0 top-0 transition-all">
     <div class="flex flex-row gap-10">
       <div class="w-full max-w-[18rem]">
         <aside class="sidebar h-full sidebar-fixed-left justify-start">
@@ -100,7 +126,7 @@ watch(token, (newToken) => {
 
             <RouterLink to="/">
               <button
-                class="flex items-center gap-2 text-gray hover:underline border transition-all px-3 py-2 rounded bg-transparent hover:bg-gray-100/[.1]">
+                class="flex items-center gap-2 text-gray  border transition-all px-3 py-2 btn bg-white hover:bg-gray-100/[.4]">
                 <HomeIcon /><span class=" ">Home</span>
               </button>
             </RouterLink>
@@ -112,16 +138,14 @@ watch(token, (newToken) => {
                 <span class="menu-title">Your chats;</span>
                 <ul class="menu-items">
                   <li class="menu-item transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 opacity-75" fill="none" viewBox="0 0 24 24"
-                      stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <span>Chat 1 name</span>
-
+                    <div class="opacity-75 hover:opacity-100">
+                      <ChatIcon />
+                    </div>
+                    <span>Testing chat</span>
+                  </li>
+                  <li class="menu-item transition-all border">
+                    <span class="text-lg opacity-70"
+                      style="margin: 0 auto;">+</span>
                   </li>
                 </ul>
               </section>
@@ -130,8 +154,7 @@ watch(token, (newToken) => {
           <section class="sidebar-footer h-full justify-end bg-gray-2 pt-2">
             <div class="divider my-0"></div>
             <div class=" z-50 flex h-fit w-full cursor-pointer hover:bg-gray-4">
-              <label
-                class="whites mx-2 flex h-fit w-full cursor-pointer p-0 hover:bg-gray-4"
+              <label class="whites mx-2 flex h-fit w-full cursor-pointer p-0 "
                 tabindex="0">
                 <div class="flex flex-row gap-4 p-4">
                   <div :class="[
@@ -163,11 +186,8 @@ watch(token, (newToken) => {
                         placeholder="Hugging Face token..." v-model="token" />
                     </div>
                   </div>
-
-
                 </div>
               </label>
-
             </div>
           </section>
         </aside>
@@ -279,7 +299,33 @@ watch(token, (newToken) => {
           <transition name="fade">
             <div v-if="isDonationModalOpen"
               class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 z-[999]">
-              <div
+              <div v-if="donateLoading"
+                class="bg-green-50 dark:bg-green-900 rounded-lg shadow-lg p-6 w-[40vw] relative border border-green-200 dark:border-green-700">
+                <div class="space-y-3 mt-3">
+                  <div
+                    class='flex space-x-2 justify-center items-center dark:invert'>
+                    <span class='sr-only'>Loading...</span>
+                    <div
+                      class='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'>
+                    </div>
+                    <div
+                      class='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'>
+                    </div>
+                    <div class='h-3 w-3 bg-black rounded-full animate-bounce'>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div v-else-if="JSON.stringify(donateData) != '{}'"
+                class="bg-green-50 dark:bg-green-900 rounded-lg shadow-lg p-6 w-[40vw] relative border border-green-200 dark:border-green-700">
+                <!-- Close Button -->
+                <button @click="isDonationModalOpen = false"
+                  class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl font-bold">
+                  &times;
+                </button>
+                {{ JSON.stringify(donateData) }}
+              </div>
+              <div v-else
                 class="bg-green-50 dark:bg-green-900 rounded-lg shadow-lg p-6 w-[40vw] relative border border-green-200 dark:border-green-700">
                 <!-- Close Button -->
                 <button @click="isDonationModalOpen = false"
@@ -312,6 +358,18 @@ watch(token, (newToken) => {
 
                 </div>
                 <div class="mb-4">
+                  <label for="impactOffering"
+                    class="block text-gray-800 dark:text-white mb-4">
+                    Impact Offering
+                  </label>
+                  <select class="select select-block">
+                    <option @click="() => selectedOffering = offering" class=""
+                      v-for="offering in impactOfferings" :key="offering.name">{{
+                        offering.name
+                      }}</option>
+                  </select>
+                </div>
+                <div class="mb-4">
                   <label for="donorName"
                     class="block text-gray-800 dark:text-white mb-4">
                     Name
@@ -332,7 +390,7 @@ watch(token, (newToken) => {
 
 
                 </div>
-                <button
+                <button @click="pledge('TestName', 'testemail@test.com', '1')"
                   class="bg-blue-600 text-white px-4 py-2 mt-4 btn hover:bg-blue-700 w-full">
                   Donate Now
                 </button>
@@ -370,7 +428,7 @@ watch(token, (newToken) => {
           </div>
 
           <!-- Chat Container -->
-          <div class="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 mb-8">
             <div class="max-w-4xl mx-auto">
               <ul class="space-y-5">
                 <li v-for="(message, index) in messages" :key="index"
@@ -387,6 +445,31 @@ watch(token, (newToken) => {
                     <p class="text-sm text-gray-800 dark:text-white">
                       {{ message.content }}
                     </p>
+                  </div>
+                </li>
+
+                <li class="max-w-4xl py-2 flex gap-x-2 sm:gap-x-4" v-if="loading">
+                  <div :class="[
+                    'shrink-0 size-[38px] rounded-full flex items-center justify-center',
+                    'bg-blue-600'
+                  ]">
+                    <span class="text-white">
+                      AI
+                    </span>
+                  </div>
+                  <div class="space-y-3 mt-3">
+                    <div
+                      class='flex space-x-2 justify-center items-center dark:invert'>
+                      <span class='sr-only'>Loading...</span>
+                      <div
+                        class='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.3s]'>
+                      </div>
+                      <div
+                        class='h-3 w-3 bg-black rounded-full animate-bounce [animation-delay:-0.15s]'>
+                      </div>
+                      <div class='h-3 w-3 bg-black rounded-full animate-bounce'>
+                      </div>
+                    </div>
                   </div>
                 </li>
               </ul>
