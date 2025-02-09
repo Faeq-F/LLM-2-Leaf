@@ -22,8 +22,8 @@ function onChangeAmount(e) {
   }
 }
 
-const name = ref('');
-const email = ref('');
+const name = ref('Faeq Faisal');
+const email = ref('faeqfaisal@hotmail.co.uk');
 
 const donateLoading = ref(false)
 const donateData = ref({})
@@ -371,7 +371,11 @@ const recommendedAmount = computed(() => (recommendedTrees.value * TREE_COST).to
                 <span class="text-sm">{{ donateData.recipient.email }}</span>
                 <br />
                 <span class="text-sm">Reference; {{ donateData.reference }}</span>
-                {{ donateData.timelineUrl }}
+                <br />
+                <a :href="donateData.timelineUrl"><span
+                    class="text-blue hover:underline ml-96 border btn bg-transparent">View
+                    your
+                    timeline</span></a>
               </div>
               <div v-else
                 class="bg-green-50 dark:bg-green-900 rounded-lg shadow-lg p-6 w-[40vw] relative border border-green-200 dark:border-green-700">
@@ -395,14 +399,19 @@ const recommendedAmount = computed(() => (recommendedTrees.value * TREE_COST).to
                 </p>
 
                 <!-- Add Tree Infographic before the form -->
-                <div class="bg-white dark:bg-black p-4 rounded-lg mb-6 border border-green-200 dark:border-green-700">
+                <div
+                  class="bg-white dark:bg-black p-4 rounded-lg mb-6 border border-green-200 dark:border-green-700">
                   <div class="flex items-center justify-between mb-2">
-                    <span class="text-gray-700 dark:text-gray-300">Trees Needed:</span>
-                    <span class="text-xl font-bold text-green-600">{{ recommendedTrees }} Trees</span>
+                    <span class="text-gray-700 dark:text-gray-300">Trees
+                      Needed:</span>
+                    <span class="text-xl font-bold text-green-600">{{
+                      recommendedTrees }} Trees</span>
                   </div>
                   <div class="flex items-center justify-between">
-                    <span class="text-gray-700 dark:text-gray-300">Recommended Amount:</span>
-                    <span class="text-xl font-bold text-green-600">${{ recommendedAmount }}</span>
+                    <span class="text-gray-700 dark:text-gray-300">Recommended
+                      Amount:</span>
+                    <span class="text-xl font-bold text-green-600">${{
+                      recommendedAmount }}</span>
                   </div>
                   <div class="text-xs text-gray-500 mt-2 text-center">
                     Each tree costs ${{ TREE_COST.toFixed(2) }} USD
