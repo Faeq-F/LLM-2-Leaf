@@ -1,5 +1,5 @@
-fetch('https://api.ipify.org?format=json').then((response) => {
-  console.log(response.json())
+fetch('https://api.ipify.org?format=json').then(async (response) => {
+  console.log(await response.json())
 })
 
 //Setup db connection
