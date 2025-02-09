@@ -96,8 +96,8 @@ async function logIn(event) {
       </div>
     </div>
     <div class="main_title p-4" v-else>
-      <input class="input input-block" placeholder="Email" type="email"
-        v-model="email" />
+      <input class="input input-block darK:text-white dark:bg-black"
+        placeholder="Email" type="email" v-model="email" />
       <input class="input input-block mt-2" placeholder="Password" type="password"
         v-model="password" />
       <div className=" mt-2 btn-group btn-group-scrollable w-full max-w-full">

@@ -1,5 +1,18 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import SunIcon from '@/components/SunIcon.vue';
+import MoonIcon from '@/components/MoonIcon.vue';
+
+let theme = 'light'
+
+function themeToggle() {
+  document.getElementsByTagName('html')[0].classList.toggle('dark')
+  if (theme == 'light') {
+    theme = 'dark'
+  } else {
+    theme = 'light'
+  }
+}
 </script>
 
 <template>
@@ -8,6 +21,13 @@ import { RouterView } from 'vue-router'
       <component :is="Component" class="z-[999]" />
     </transition>
   </router-view>
+  <div id="sun" @click="themeToggle" class="cursor-pointer">
+    <SunIcon />
+  </div>
+
+  <div id="moon" @click="themeToggle" class="cursor-pointer dark:invert">
+    <MoonIcon />
+  </div>
 </template>
 
 <style lang="scss">
@@ -109,5 +129,19 @@ body {
   margin: 0;
   width: 100vw;
   overflow: hidden;
+}
+
+#sun,
+#moon {
+  position: absolute;
+  z-index: 999;
+}
+
+html.dark #sun {
+  display: none;
+}
+
+html:not(.dark) #moon {
+  display: none;
 }
 </style>

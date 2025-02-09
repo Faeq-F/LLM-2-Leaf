@@ -116,39 +116,46 @@ watch(token, (newToken) => {
     class="h-screen w-screen p-0 m-0 absolute left-0 top-0 transition-all">
     <div class="flex flex-row gap-10">
       <div class="w-full max-w-[18rem]">
-        <aside class="sidebar h-full sidebar-fixed-left justify-start">
+        <aside
+          class="sidebar h-full sidebar-fixed-left justify-start dark:bg-black">
           <section class="sidebar-title items-center p-4">
 
             <RouterLink to="/">
               <button
-                class="flex items-center gap-2 text-gray  border transition-all px-3 py-2 btn bg-white hover:bg-gray-100/[.4]">
-                <HomeIcon /><span class=" ">Home</span>
+                class="flex items-center gap-2 text-gray translate-x-[170%] border transition-all px-3 py-2 btn bg-white hover:bg-gray-100/[.4] dark:bg-gray-900">
+                <span class="dark:invert">
+                  <HomeIcon />
+                </span><span class="dark:text-white">Home</span>
               </button>
             </RouterLink>
 
           </section>
-          <section class="sidebar-content h-fit min-h-[20rem] overflow-visible">
+          <section
+            class="sidebar-content h-fit min-h-[20rem] overflow-visible dark:bg-black">
             <nav class="menu rounded-md">
               <section class="menu-section px-4">
-                <span class="menu-title">Your chats;</span>
+                <span class="menu-title dark:text-white">Your chats;</span>
                 <ul class="menu-items">
-                  <li class="menu-item transition-all">
-                    <div class="opacity-75 hover:opacity-100">
+                  <li class="menu-item transition-all dark:hover:bg-gray-900">
+                    <div class="opacity-75 hover:opacity-100 dark:invert">
                       <ChatIcon />
                     </div>
-                    <span>Testing chat</span>
+                    <span class="dark:invert">Testing chat</span>
                   </li>
-                  <li class="menu-item transition-all border">
-                    <span class="text-lg opacity-70"
+                  <li
+                    class="menu-item transition-all border dark:hover:bg-gray-900">
+                    <span class="text-lg opacity-70 dark:invert"
                       style="margin: 0 auto;">+</span>
                   </li>
                 </ul>
               </section>
             </nav>
           </section>
-          <section class="sidebar-footer h-full justify-end bg-gray-2 pt-2">
+          <section
+            class="sidebar-footer h-full justify-end bg-gray-2 pt-2 dark:bg-black">
             <div class="divider my-0"></div>
-            <div class=" z-50 flex h-fit w-full cursor-pointer hover:bg-gray-4">
+            <div
+              class=" z-50 flex h-fit w-full cursor-pointer hover:bg-gray-4 dark:hover:bg-gray-900">
               <label class="whites mx-2 flex h-fit w-full cursor-pointer p-0 "
                 tabindex="0">
                 <div class="flex flex-row gap-4 p-4">
@@ -161,21 +168,22 @@ watch(token, (newToken) => {
                     </span>
                   </div>
 
-                  <div class="flex flex-col">
+                  <div class="flex flex-col dark:text-white">
                     <span>Faeq Faisal</span>
                     <span
                       class="text-xs font-normal text-content2">faeqfaisal@hotmail.co.uk</span>
                   </div>
 
-                  <label class="btn bg-transparent" for="modal-1">
+                  <label class="btn bg-transparent dark:invert" for="modal-1">
                     <SettingsIcon />
                   </label>
                   <input class="modal-state" id="modal-1" type="checkbox" />
                   <div class="modal w-screen">
                     <label class="modal-overlay" for="modal-1"></label>
-                    <div class="modal-content flex flex-col gap-5">
+                    <div
+                      class="modal-content flex flex-col gap-5 dark:bg-gray-900 dark:text-white">
                       <label for="modal-1"
-                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</label>
+                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:invert">✕</label>
                       <h2 class="text-xl">Settings</h2>
                       <input class="input-rounded input w-full"
                         placeholder="Hugging Face token..." v-model="token" />
@@ -207,9 +215,10 @@ watch(token, (newToken) => {
                 <span>My CO₂ Emissions</span>
               </label>
               <!-- CO₂ Stats Popover Modal -->
-              <div class="popover-content popover-bottom-left bg-gray-100"
+              <div
+                class="popover-content popover-bottom-left bg-gray-100 dark:bg-gray-900"
                 tabindex="0">
-                <div class="popover-arrow"></div>
+                <div class="popover-arrow dark:bg-gray-900"></div>
                 <div class="">
                   <!-- Header -->
                   <div class="text-center mb-4">
@@ -223,7 +232,7 @@ watch(token, (newToken) => {
                   <div class="grid gap-4">
                     <!-- Metric 1: CO₂ used in this session -->
                     <div
-                      class="flex items-center p-4 border rounded-lg shadow bg-white">
+                      class="flex items-center p-4 border rounded-lg shadow bg-white dark:bg-black">
                       <svg xmlns="http://www.w3.org/2000/svg"
                         class="w-8 h-8 text-green-600" fill="none"
                         stroke="currentColor" stroke-width="2"
@@ -246,7 +255,7 @@ watch(token, (newToken) => {
                     </div>
                     <!-- Metric 2: CO₂ used from this model -->
                     <div
-                      class="flex items-center p-4 border rounded-lg shadow bg-white">
+                      class="flex items-center p-4 border rounded-lg shadow bg-white dark:bg-black">
                       <CloudIcon />
                       <div class="ml-4">
                         <div
@@ -260,7 +269,7 @@ watch(token, (newToken) => {
                     </div>
                     <!-- Metric 3: Suggested trees to plant -->
                     <div
-                      class="flex items-center p-4 border rounded-lg shadow bg-white">
+                      class="flex items-center p-4 border rounded-lg shadow bg-white dark:bg-black">
                       <div class="-ml-[5px]">
                         <TreeIcon />
                       </div>
@@ -417,7 +426,7 @@ watch(token, (newToken) => {
                 Welcome to LLM 2 LEAF
               </h1>
               <p class="mt-3 text-gray-600 dark:text-neutral-400">
-                Use your favourite LLLM with net zero CO₂ emissions
+                Use your favourite LLM with net zero CO₂ emissions
               </p>
             </div>
           </div>
@@ -472,21 +481,21 @@ watch(token, (newToken) => {
           </div>
           <!-- Input Area -->
           <div
-            class="sticky bottom-0 z-10 bg-white border-t border-gray-200 pt-2 pb-3 sm:pt-4 sm:pb-6 dark:bg-neutral-900 dark:border-neutral-700">
+            class="sticky bottom-0 z-10 bg-white border-t border-gray-200 pt-2 pb-3 sm:pt-4 sm:pb-6 dark:bg-black dark:border-neutral-700">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-0">
               <div class="relative">
                 <textarea v-model="inputValue" @keypress="handleKeyPress"
-                  class="p-4 pb-12 block w-full border-gray-200 rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700"
+                  class="p-4 pb-12 block w-full dark:bg-black border-gray-200 rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700"
                   placeholder="Ask me anything..."></textarea>
 
                 <div
-                  class="absolute bottom-px inset-x-px p-2 rounded-b-lg bg-white dark:bg-neutral-900">
+                  class="absolute bottom-px inset-x-px p-2 rounded-b-lg bg-white dark:bg-black">
                   <div class="flex justify-between items-center">
                     <!-- Model Selector -->
                     <div class="relative">
                       <div class="popover mr-2">
                         <label
-                          class="popover-trigger  btn bg-transparent border w-auto"
+                          class="popover-trigger  btn bg-transparent border w-auto dark:invert"
                           tabindex="0">
                           {{ selectedModel.name }}
                           <svg xmlns="http://www.w3.org/2000/svg"
