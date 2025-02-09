@@ -1,8 +1,5 @@
-import { publicIp } from 'public-ip'
-
-await publicIp.v4().then((ip) => {
-  console.log('your public ip address', ip)
-})
+const response = await fetch('https://api.ipify.org?format=json');
+console.log( await response.json());
 
 //Setup db connection
 var Express = require('express')
