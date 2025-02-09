@@ -1,5 +1,6 @@
 //Setup db connection
 var Express = require('express');
+const path = require('path');
 var MongoClient = require('mongodb').MongoClient;
 const app = Express();
 const cors = require('cors');
