@@ -17,7 +17,7 @@ var database;
  */
 app.listen(7860, () => {
 	MongoClient.connect(
-		"mongodb+srv://faeq:<db_password>@llm2leaf.asj1n.mongodb.net/?retryWrites=true&w=majority&appName=LLM2LEAF&directConnection=true",
+		"mongodb+srv://faeq:<db_password>@llm2leaf.asj1n.mongodb.net/?retryWrites=true&w=majority&appName=LLM2LEAF",
 		async (/** @type {any} */ error, /** @type {{ db: (arg0: any) => any; }} */ client) => {
 			database = client.db("LLM2LEAF");
 			if (error) console.error(error);
