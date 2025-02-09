@@ -18,6 +18,7 @@ RUN npm run build
 
 # Make port 7860 available to the world outside this container
 EXPOSE 7860
+EXPOSE 5038
 
 # Run the app
 CMD ["node", "server.cjs"]

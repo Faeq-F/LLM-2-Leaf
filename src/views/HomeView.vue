@@ -13,7 +13,7 @@
       <p class="main_title_text1">
         Choose Your LLM:
       </p>
-      <RouterLink to="/chat">
+      <RouterLink to="/signup">
         <div class="main_title_textbox1">
           <img src="/deepseek.png" alt="Deepseek Logo" class="deepseek_logo">
           <p class="deepseek_text">Deepseek</p>

@@ -22,11 +22,6 @@ function onChangeAmount(e) {
   }
 }
 
-
-//attempt to use mongo db
-// fetch('http://localhost:5038/api/get/collection/' + 'Users').then((response) => {
-//   console.log(response)
-// });
 const donateLoading = ref(false)
 const donateData = ref({})
 

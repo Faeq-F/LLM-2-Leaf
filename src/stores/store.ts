@@ -1,17 +1,10 @@
-import { ref, type Ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-interface message {
-  isAI: boolean
-  content: string
-  initials: string
-}
-
-export const useMessagesStore = defineStore('messages', () => {
-  const messages: Ref<message[]> = ref([])
-  function push(val: message) {
-    messages.value.push(val)
+export const useUserStore = defineStore('user', () => {
+  const user = ref({})
+  function setVal(val: any) {
+    user.value = val
   }
-
-  return { messages, push }
+  return { user, setVal }
 })
