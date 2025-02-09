@@ -1,3 +1,9 @@
+import { publicIp } from 'public-ip'
+
+await publicIp.v4().then((ip) => {
+  console.log('your public ip address', ip)
+})
+
 //Setup db connection
 var Express = require('express')
 const cors = require('cors')
