@@ -8,6 +8,7 @@ import HomeIcon from '@/components/HomeIcon.vue'
 import CloudIcon from '@/components/CloudIcon.vue'
 import ChatIcon from '@/components/ChatIcon.vue'
 import SettingsIcon from '@/components/SettingsIcon.vue'
+import TickIcon from '@/components/TickIcon.vue'
 
 import type { Ref } from 'vue'
 
@@ -22,15 +23,19 @@ function onChangeAmount(e) {
   }
 }
 
+const name = ref('');
+const email = ref('');
+
 const donateLoading = ref(false)
 const donateData = ref({})
 
-const pledge = async (name, email, amount): Promise<any> => {
+const pledge = async (name, email, amount, selectedOfferingId): Promise<any> => {
   donateLoading.value = true;
   const formdata = new FormData()
+  formdata.append('offering', selectedOfferingId)
   formdata.append('name', name)
   formdata.append('email', email)
-  formdata.append('email', amount)
+  formdata.append('amount', amount)
 
   var response = await fetch('http://localhost:5038/api/pledge', {
     method: 'POST',
@@ -38,6 +43,7 @@ const pledge = async (name, email, amount): Promise<any> => {
   })
   var body = await response.json();
   donateLoading.value = false;
+  console.log(body)
   donateData.value = body
 };
 
@@ -327,7 +333,20 @@ watch(token, (newToken) => {
                   class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl font-bold">
                   &times;
                 </button>
-                {{ JSON.stringify(donateData) }}
+                <div
+                  style="left: 50%; position: relative; transform: translateX(-10%);">
+                  <TickIcon />
+                </div>
+                <span>You Paid: {{ donateData.charge.amount }} {{
+                  donateData.charge.currencyCode }}</span>
+                <br />
+                <span class="text-sm mt-2">{{ new
+                  Date(donateData.createdAt).toDateString() }}</span>
+                <br />
+                <span class="text-sm">{{ donateData.recipient.email }}</span>
+                <br />
+                <span class="text-sm">Reference; {{ donateData.reference }}</span>
+                {{ donateData.timelineUrl }}
               </div>
               <div v-else
                 class="bg-green-50 dark:bg-green-900 rounded-lg shadow-lg p-6 w-[40vw] relative border border-green-200 dark:border-green-700">
@@ -378,7 +397,7 @@ watch(token, (newToken) => {
                     class="block text-gray-800 dark:text-white mb-4">
                     Name
                   </label>
-                  <input type="text" id="donorName"
+                  <input type="text" id="donorName" v-model="name"
                     class=" px-3 py-2 input-block input"
                     placeholder="Your Name" />
 
@@ -388,13 +407,13 @@ watch(token, (newToken) => {
                     class="block text-gray-800 dark:text-white mb-4">
                     Email
                   </label>
-                  <input type="email" id="donorEmail"
+                  <input type="email" id="donorEmail" v-model="email"
                     class=" px-3 py-2 input-block input"
                     placeholder="Your Email" />
 
 
                 </div>
-                <button @click="pledge('TestName', 'testemail@test.com', '1')"
+                <button @click="pledge(name, email, amount, selectedOffering.id)"
                   class="bg-blue-600 text-white px-4 py-2 mt-4 btn hover:bg-blue-700 w-full">
                   Donate Now
                 </button>
@@ -423,7 +442,7 @@ watch(token, (newToken) => {
               </div>
               <h1
                 class="text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white">
-                Welcome to LLM 2 LEAF
+                Welcome to LLM 2 Leaf
               </h1>
               <p class="mt-3 text-gray-600 dark:text-neutral-400">
                 Use your favourite LLM with net zero CO₂ emissions

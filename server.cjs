@@ -12,6 +12,18 @@ const app = Express()
 app.use(cors())
 app.set('case sensitive routing', true) //required to pass the correct names of collections, etc.
 
+function makeReference(length) {
+  let result = ''
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  let counter = 0
+  while (counter < length) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    counter += 1
+  }
+  return result
+}
+
 /** reusable instance of db @type{any} */
 var database
 
@@ -67,8 +79,9 @@ app.post(
   (/** @type {any} */ request, /** @type {{ send: (arg0: any) => void; }} */ response) => {
     let result = async () => {
       const formData = request.body
+      console.log(request.body)
 
-      return await fetch('https://api.verdn.com/v2/pledge-transaction', {
+      const res = await fetch('https://api.verdn.com/v2/pledge-transaction', {
         method: 'POST',
         headers: {
           Authorization:
@@ -76,20 +89,23 @@ app.post(
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          reference: 'order_123',
+          reference: formData.name + makeReference(5),
           recipient: {
             email: formData.email,
           },
           pledges: [
             {
               impact: {
-                offeringId: 'io_01J4RSBX6KPQ4RYCRZ8C4QWRHF',
+                offeringId: formData.offering,
                 amount: parseFloat(formData.amount),
               },
             },
           ],
         }),
       }).catch((err) => console.error(err))
+
+      const obj = await res.json()
+      return obj
     }
 
     result()
