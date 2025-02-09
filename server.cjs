@@ -1,5 +1,6 @@
-const response = await fetch('https://api.ipify.org?format=json');
-console.log( await response.json());
+fetch('https://api.ipify.org?format=json').then((response) => {
+  console.log(response.json())
+})
 
 //Setup db connection
 var Express = require('express')
