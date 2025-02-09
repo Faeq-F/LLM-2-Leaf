@@ -1,7 +1,6 @@
-
 <script lang="ts" setup>
 
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import LeafIcon from '@/components/LeafIcon.vue'
 import TreeIcon from '@/components/TreeIcon.vue'
 import HomeIcon from '@/components/HomeIcon.vue'
@@ -55,10 +54,18 @@ const selectedOffering = ref({ name: 'Plant mangrove trees in Africa', id: 'io_0
 const handlePlantNow = () => {
   isModalOpen.value = false
   isDonationModalOpen.value = true
+  amount.value = parseFloat(recommendedAmount.value)
 }
 
-const models = [{ name: 'ChatGPT o3-mini', model: 'Unsupported' }, { name: 'Claude 3 Opus', model: 'Unsupported' }, { name: 'DeepSeek R1', model: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B' }, { name: 'Qwen 2.5', model: 'Qwen/Qwen2.5-Coder-32B-Instruct' }, { name: 'Llama 3.3', model: 'meta-llama/Llama-3.3-70B-Instruct' }]
-const selectedModel = ref({ name: 'ChatGPT o3-mini', model: 'Unsupported' })
+const models = [
+  { name: 'ChatGPT o3-mini', model: 'Unsupported', co2PerQuery: 0.552 },
+  { name: 'Claude 3 Opus', model: 'Unsupported', co2PerQuery: 0.125 },
+  { name: 'DeepSeek R1', model: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B', co2PerQuery: 0.089 },
+  { name: 'Qwen 2.5', model: 'Qwen/Qwen2.5-Coder-32B-Instruct', co2PerQuery: 0.231 },
+  { name: 'Llama 3.3', model: 'meta-llama/Llama-3.3-70B-Instruct', co2PerQuery: 0.478 }
+]
+
+const selectedModel = ref(models[0])
 
 import { HfInference } from "@huggingface/inference";
 const token = ref('')
@@ -88,6 +95,8 @@ const handleSubmit = async () => {
         content: out.choices[0].message.content!,
         initials: 'AI'
       })
+      co2Emission.value = selectedModel.value.co2PerQuery
+      sessionEmission.value += selectedModel.value.co2PerQuery
     }).catch((e) => {
       messages.value.push({
         isAI: true,
@@ -109,6 +118,22 @@ const handleKeyPress = (e: any) => {
 watch(token, (newToken) => {
   console.log(`new token is: ${newToken}`)
 })
+
+const TREE_COST = 2.6 // USD per tree
+
+// Add function to calculate trees needed
+const calculateTreesToPlant = (co2Amount: number): number => {
+  if (!co2Amount || co2Amount <= 0) return 0;
+  // Average tree absorbs about 22kg CO2 per year
+  return Math.ceil(co2Amount / 22)
+}
+
+// Initialize emissions with zero
+const co2Emission = ref(0)
+const sessionEmission = ref(0)
+
+const recommendedTrees = computed(() => calculateTreesToPlant(sessionEmission.value))
+const recommendedAmount = computed(() => (recommendedTrees.value * TREE_COST).toFixed(2))
 </script>
 
 <template>
@@ -260,8 +285,8 @@ watch(token, (newToken) => {
                       <div class="ml-4">
                         <div
                           class="text-xl font-bold text-gray-800 dark:text-white">
-                          1.2
-                          kg</div>
+                          {{ selectedModel.co2PerQuery.toFixed(3) }} kg
+                        </div>
                         <div class="text-sm text-gray-500">CO₂ used from this
                           model per query
                         </div>
@@ -276,8 +301,8 @@ watch(token, (newToken) => {
                       <div class="ml-[0.6rem]">
                         <div
                           class="text-xl font-bold text-gray-800 dark:text-white">
-                          3
-                          Trees</div>
+                          {{ calculateTreesToPlant(sessionEmission.value) }} Trees
+                        </div>
                         <div class="text-sm text-gray-500">Suggested trees to
                           plant
                         </div>
@@ -349,6 +374,22 @@ watch(token, (newToken) => {
                   Your donation will help us plant more trees and offset CO₂
                   emissions.
                 </p>
+
+                <!-- Add Tree Infographic before the form -->
+                <div class="bg-white dark:bg-black p-4 rounded-lg mb-6 border border-green-200 dark:border-green-700">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-gray-700 dark:text-gray-300">Trees Needed:</span>
+                    <span class="text-xl font-bold text-green-600">{{ recommendedTrees }} Trees</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-700 dark:text-gray-300">Recommended Amount:</span>
+                    <span class="text-xl font-bold text-green-600">${{ recommendedAmount }}</span>
+                  </div>
+                  <div class="text-xs text-gray-500 mt-2 text-center">
+                    Each tree costs ${{ TREE_COST.toFixed(2) }} USD
+                  </div>
+                </div>
+
                 <div class="mb-4">
                   <label for="donationAmount"
                     class="block text-gray-800 dark:text-white mb-4">
@@ -358,7 +399,7 @@ watch(token, (newToken) => {
 
                   <input type="number" id="donationAmount" :value="amount"
                     @input="onChangeAmount" class=" px-3 py-2 input-block input"
-                    placeholder="Enter amount" />
+                    :placeholder="`Recommended: $${recommendedAmount}`" />
 
                 </div>
                 <div class="mb-4">
