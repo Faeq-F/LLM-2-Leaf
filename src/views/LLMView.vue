@@ -14,6 +14,8 @@ import type { Ref } from 'vue'
 const isModalOpen = ref(false) // Controls the CO₂ stats popover
 const isDonationModalOpen = ref(false) // Controls the donation modal
 
+const CO = ref(2.5);
+
 const amount = ref(0);
 function onChangeAmount(e) {
   let val = parseFloat(e.target.value)
@@ -81,6 +83,7 @@ const loading = ref(false)
 const messages: Ref<message[]> = ref([])
 
 const handleSubmit = async () => {
+  CO.value = CO.value * 1.0012
   let val = inputValue.value;
   loading.value = true;
   inputValue.value = ''
@@ -277,7 +280,7 @@ const recommendedAmount = computed(() => (recommendedTrees.value * TREE_COST).to
                       <div class="ml-4">
                         <div
                           class="text-xl font-bold text-gray-800 dark:text-white">
-                          2.5
+                          {{ CO.toFixed(2) }}
                           kg</div>
                         <div class="text-sm text-gray-500">CO₂ used in this
                           session
